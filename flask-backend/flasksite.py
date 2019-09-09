@@ -13,31 +13,26 @@ config = {
 }
 
 firebase = pyrebase.initialize_app(config)
-
-#db = firebase.database()
-
-#db.child("names").push({"name": "Jack"})
-
-#Register Login
-
-
 auth = firebase.auth()
-
-#email = input ('Please enter your email\n')
-#password = input('Please enter your password\n')
-
-#user = auth.create_user_with_email_and_password(email, password)
-
-#auth.get_account_info(user['idToken'])
 
 @app.route("/")
 def my_index():
 	return render_template("index.html", token = "Hello Flask + React!")
 
+#At the url /register, the create account page
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+	if request.method == 'POST':
+		email = request.form['email']
+		password = request.form['pass']
+		auth.create_user_with_email_and_password(email, password)
+		return 'Account created successfully.'
+	return render_template('register.html')
+
 #At the url /login, Login page
 
 @app.route("/login", methods=['GET', 'POST' ])
-
 def login():
 	if request.method == 'POST':
 		email = request.form['name']
