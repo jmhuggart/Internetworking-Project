@@ -1,0 +1,15 @@
+.login-card .login-form {
+    max-width: 100%;
+}
+
+.login-card .login-form-forgot {
+    float: left;
+}
+
+.login-card .login-form-button {
+    width: 100%;
+}
+
+.login-card .login-form-reg {
+    float: right
+}
