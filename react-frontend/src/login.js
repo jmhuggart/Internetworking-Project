@@ -12,6 +12,22 @@ class LoginForm extends React.Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
+
+                var login_data = values;
+                
+                var request = new Request('/login', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(login_data)
+                });
+
+                fetch(request)
+                .then(function() {
+                    console.log('it worked!');
+
+                });
             }
         });
     };

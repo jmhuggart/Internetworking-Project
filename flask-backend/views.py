@@ -11,7 +11,7 @@ config = {
   	"storageBucket": "",
   	"messagingSenderId": "401570430500",
   	"appId": "1:401570430500:web:ffeddcc63a657b98"
-}
+	}
 
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
@@ -24,8 +24,9 @@ def my_index():
 @main.route('/login', methods=['GET', 'POST' ])
 def login():
 	if request.method == 'POST':
-		email = request.form['email']
-		password = request.form['pass']
+		login_data = request.get_json()
+		email = login_data['email']
+		password = login_data['pass']
 		user = auth.sign_in_with_email_and_password(email, password)
 		return 'Login Successful'
 	return render_template('index.html')

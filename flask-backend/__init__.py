@@ -1,9 +1,9 @@
 from flask import *
-#import pyrebase
 
 def create_app():
 	app = Flask(__name__)
-	app.run(debug = True)
+	if __name__ == 'main':
+		app.run(debug = True)
 
 	from .views import main
 	app.register_blueprint(main)
