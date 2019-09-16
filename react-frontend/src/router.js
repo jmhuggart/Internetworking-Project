@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Home from './App.js';
 import LoginForm from './login.js';
-//import Register from './register.js';
+import RegisterForm from './register.js';
 
 export default class AppRouter extends React.Component {
 	constructor(props) {
@@ -15,7 +15,7 @@ export default class AppRouter extends React.Component {
 				<Switch>
 					<Route exact path="/" component={Home}></Route>
 					<Route path="/login" component={LoginForm}></Route>
-					
+					<Route path="/register" component={RegisterForm}></Route>
 				</Switch>
 			</BrowserRouter>
 		)

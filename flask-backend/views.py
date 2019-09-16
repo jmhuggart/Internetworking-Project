@@ -34,9 +34,10 @@ def login():
 @main.route('/register', methods=['GET', 'POST' ])
 def register():
 	if request.method == 'POST':
-		name = request.form['name']
-		email = request.form['email']
-		password = request.form['pass']
+		register_data = request.get_json()
+		name = register_data['name']
+		email = register_data['email']
+		password = register_data['pass']
 		auth.create_user_with_email_and_password(email, password)
 		user = auth.sign_in_with_email_and_password(email, password)
 		data = {
@@ -44,5 +45,5 @@ def register():
 			"Email": email
 		}
 		db.child("Users").push(data, user['idToken'])
-		return 'Account created successfully.'
-	return render_template('register.html')
+		return my_index()
+	return render_template('index.html')

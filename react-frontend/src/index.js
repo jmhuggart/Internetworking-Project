@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './login.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 import AppRouter from './router.js';
 

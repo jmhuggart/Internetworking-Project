@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Card, Form, Icon, Input, Button } from 'antd';
 import './login.css';
 
-class LoginForm extends React.Component {
+class RegisterForm extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -13,14 +13,14 @@ class LoginForm extends React.Component {
             if (!err) {
                 console.log('Received values of form: ', values);
 
-                var login_data = values;
+                var register_data = values;
                 
-                var request = new Request('/login', {
+                var request = new Request('/register', {
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(login_data)
+                    body: JSON.stringify(register_data)
                 });
 
                 fetch(request)
@@ -36,35 +36,55 @@ class LoginForm extends React.Component {
             <div style={{ marginTop: '10%' }}>
                 <Row >
                     <Col span={6} offset={9} style={{ background: 'red', }}>
-                        <Card title="Login" style={{ width: "100%" }} className='login-card'>
+                        <Card title="Register" style={{ width: "100%" }} className='login-card'>
                             <Form onSubmit={this.handleSubmit} className="login-form">
                                 <Form.Item>
                                     {getFieldDecorator('email', {
                                         rules: [{ required: true, message: 'Please enter your email!' }],
                                     })(
+                                        <label>
+                                            Email
                                         <Input
                                             prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                             placeholder="enter your email"
-                                        />,
+                                        />
+                                        </label>,
                                     )}
                                 </Form.Item>
                                 <Form.Item>
                                     {getFieldDecorator('pass', {
                                         rules: [{ required: true, message: 'Please enter your password!' }],
                                     })(
-                                        <Input.Password
+                                        <label>
+                                            Password
+                                        
+                                        <Input
                                             prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                            type="password"
+                                            
                                             placeholder="enter your password" />
+                                         </label>
                                        ,
                                     )}
                                 </Form.Item>
                                 <Form.Item>
-                                   
+                                    {getFieldDecorator('name', {
+                                        rules: [{ required: true, message: 'Please enter your name!' }],
+                                    })(
+                                        <label>
+                                            Name
+                                        <Input
+                                            prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                            placeholder="enter your name"
+                                        />
+                                        </label>,
+                                    )}
+                                </Form.Item>
+                                <Form.Item>
+                                    
                                     <Button type="primary" htmlType="submit" className="login-form-button">
-                                        Log in
+                                        Sign up
                                     </Button>
-                                    <a href="/reg" className='login-form-reg'>register now!</a>
+                                    <a href="/" className='login-form-reg'>login</a>
                                 </Form.Item>
                             </Form>
                         </Card>
@@ -75,6 +95,6 @@ class LoginForm extends React.Component {
         )
     }
 }
-LoginForm = Form.create()(LoginForm);
+RegisterForm = Form.create()(RegisterForm);
 
-export default LoginForm;
+export default RegisterForm;
