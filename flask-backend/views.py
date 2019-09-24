@@ -21,6 +21,21 @@ db = firebase.database()
 def my_index():
 	return render_template("index.html")
 
+@main.route('/adminPage', methods=['GET', 'POST' ])
+def adminPage():
+	if request.method == 'POST':
+		task_data = request.get_json()
+		subject = task_data['subject']
+		question = task_data['question']
+		numberofanswers = task_data['number']
+		taskdata = {
+			"Subject": subject,
+			"Question": question
+		}
+		db.child("Tasks").push(taskdata)
+		return my_index()
+	return render_template("index.html")
+
 @main.route('/login', methods=['GET', 'POST' ])
 def login():
 	if request.method == 'POST':
