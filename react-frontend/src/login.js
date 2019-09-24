@@ -14,7 +14,7 @@ class LoginForm extends React.Component {
                 console.log('Received values of form: ', values);
 
                 var login_data = values;
-                
+
                 var request = new Request('/login', {
                     method: 'POST',
                     headers: {
@@ -49,7 +49,7 @@ class LoginForm extends React.Component {
                                     )}
                                 </Form.Item>
                                 <Form.Item>
-                                    {getFieldDecorator('pass', {
+                                    {getFieldDecorator('password', {
                                         rules: [{ required: true, message: 'Please enter your password!' }],
                                     })(
                                         <Input.Password
@@ -60,7 +60,7 @@ class LoginForm extends React.Component {
                                     )}
                                 </Form.Item>
                                 <Form.Item>
-                                   
+
                                     <Button type="primary" htmlType="submit" className="login-form-button">
                                         Log in
                                     </Button>

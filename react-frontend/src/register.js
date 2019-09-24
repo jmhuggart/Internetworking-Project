@@ -14,7 +14,7 @@ class RegisterForm extends React.Component {
                 console.log('Received values of form: ', values);
 
                 var register_data = values;
-                
+
                 var request = new Request('/register', {
                     method: 'POST',
                     headers: {
@@ -57,10 +57,10 @@ class RegisterForm extends React.Component {
                                     })(
                                         <label>
                                             Password
-                                        
+
                                         <Input
                                             prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                            
+
                                             placeholder="enter your password" />
                                          </label>
                                        ,
@@ -68,19 +68,19 @@ class RegisterForm extends React.Component {
                                 </Form.Item>
                                 <Form.Item>
                                     {getFieldDecorator('name', {
-                                        rules: [{ required: true, message: 'Please enter your name!' }],
+                                        rules: [{ required: true, message: 'Please enter your username!' }],
                                     })(
                                         <label>
-                                            Name
+                                            Username
                                         <Input
                                             prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                            placeholder="enter your name"
+                                            placeholder="enter your username"
                                         />
                                         </label>,
                                     )}
                                 </Form.Item>
                                 <Form.Item>
-                                    
+
                                     <Button type="primary" htmlType="submit" className="login-form-button">
                                         Sign up
                                     </Button>
@@ -95,6 +95,7 @@ class RegisterForm extends React.Component {
         )
     }
 }
+
 RegisterForm = Form.create()(RegisterForm);
 
 export default RegisterForm;
