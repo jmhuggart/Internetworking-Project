@@ -1,10 +1,12 @@
 import React from 'react';
 import { Row, Col, Card, Form, Icon, Input, Button } from 'antd';
+import { Redirect } from 'react-router-dom';
 import './login.css';
 
 class RegisterForm extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {isComplete: false};
     }
 
     handleSubmit = e => {
@@ -26,12 +28,19 @@ class RegisterForm extends React.Component {
                 fetch(request)
                 .then(function() {
                 });
+
+                this.setState({
+                        isComplete: true
+                    });
             }
         });
     };
 
     render() {
         const { getFieldDecorator } = this.props.form;
+        if (this.state.isComplete) {
+            return <Redirect to='/' />
+        }
         return (
             <div style={{ marginTop: '10%' }}>
                 <Row >

@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './App.js';
 import LoginForm from './login.js';
 import RegisterForm from './register.js';
-import Admin from './adminPage.jsx'
+import Admin from './adminPage.js'
 
 export default class AppRouter extends React.Component {
 	constructor(props) {

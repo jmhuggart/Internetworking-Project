@@ -1,10 +1,12 @@
 import React from 'react';
 import { Row, Col, Card, Form, Icon, Input, Button } from 'antd';
+import { Redirect } from 'react-router-dom';
 import './login.css';
 
 class LoginForm extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {isComplete: false};
     }
 
     handleSubmit = e => {
@@ -24,14 +26,29 @@ class LoginForm extends React.Component {
                 });
 
                 fetch(request)
-                .then(function() {
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw Error(response.statusText);
+                    }
+                    return response;
+                }).then(function(response) {
+                    console.log('ok');
+                }).catch(function(error) {
+                    console.log(error);
                 });
+
+                this.setState({
+                        isComplete: true
+                    });
             }
         });
     };
 
     render() {
         const { getFieldDecorator } = this.props.form;
+        if (this.state.isComplete) {
+            return <Redirect to='/' />
+        }
         return (
             <div style={{ marginTop: '10%' }}>
                 <Row >
@@ -49,7 +66,7 @@ class LoginForm extends React.Component {
                                     )}
                                 </Form.Item>
                                 <Form.Item>
-                                    {getFieldDecorator('password', {
+                                    {getFieldDecorator('pass', {
                                         rules: [{ required: true, message: 'Please enter your password!' }],
                                     })(
                                         <Input.Password

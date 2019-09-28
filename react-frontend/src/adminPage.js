@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Card, Form, Icon, Input, Button, Checkbox, Tabs, Select } from 'antd';
-import CreateTask from './create-task.jsx';
+import CreateTask from './create-task.js';
 import './login.css';
 
 
