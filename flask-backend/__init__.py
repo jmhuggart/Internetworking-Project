@@ -1,9 +1,10 @@
 from flask import *
 
+
+
 def create_app():
 	app = Flask(__name__)
-	if __name__ == 'main':
-		app.run(debug = True)
+	app.run(debug = True)
 
 	from .views import main
 	app.register_blueprint(main)
@@ -58,5 +59,5 @@ def login():
 	return render_template('index.html')
 
 #Allows us to save changes and have them reflect immediately on the webpage without restarting the web server
-app.run(debug = True)	
+app.run(debug = True)
 '''

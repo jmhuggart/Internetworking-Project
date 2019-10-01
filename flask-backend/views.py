@@ -27,10 +27,26 @@ def adminPage():
 		task_data = request.get_json()
 		subject = task_data['subject']
 		question = task_data['question']
-		numberofanswers = task_data['number']
+		number = task_data['number']
+		answerA = task_data['subjectA']
+		answerB = task_data['subjectB']
+		if number == "3":
+			answerC = task_data['subjectC']
+			answerD = 'empty'
+		elif number == "4":
+			answerC = task_data['subjectC']
+			answerD = task_data['subjectD']
+		else:
+			answerC = "empty"
+			answerD = "empty"
+
 		taskdata = {
 			"Subject": subject,
-			"Question": question
+			"Question": question,
+			"Answer-A": answerA,
+			"Answer-B": answerB,
+			"Answer-C": answerC,
+			"Answer-D": answerD
 		}
 		db.child("Tasks").push(taskdata)
 		return my_index()
