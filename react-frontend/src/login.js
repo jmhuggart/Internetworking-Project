@@ -1,12 +1,15 @@
 import React from 'react';
-import { Row, Col, Card, Form, Icon, Input, Button } from 'antd';
+import { Alert, Row, Col, Card, Form, Icon, Input, Button } from 'antd';
 import { Redirect } from 'react-router-dom';
 import './login.css';
 
 class LoginForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {isComplete: false};
+        this.state = {
+            isComplete: false,
+            isInvalid: false
+        };
     }
 
     handleSubmit = e => {
@@ -16,6 +19,7 @@ class LoginForm extends React.Component {
                 console.log('Received values of form: ', values);
 
                 var login_data = values;
+                const that = this;
 
                 var request = new Request('/login', {
                     method: 'POST',
@@ -33,19 +37,24 @@ class LoginForm extends React.Component {
                     return response;
                 }).then(function(response) {
                     console.log('ok');
+                    that.setState({
+                        isComplete: true,
+                        isInvalid: false
+                    });
                 }).catch(function(error) {
+                    that.setState({
+                        isComplete: false,
+                        isInvalid: true
+                    });
                     console.log(error);
                 });
-
-                this.setState({
-                        isComplete: true
-                    });
             }
         });
     };
 
     render() {
         const { getFieldDecorator } = this.props.form;
+        const isInvalid = this.state.isInvalid;
         if (this.state.isComplete) {
             return <Redirect to='/' />
         }
@@ -85,7 +94,13 @@ class LoginForm extends React.Component {
                                 </Form.Item>
                             </Form>
                         </Card>
-
+                        {isInvalid ? (
+                            <Alert
+                            message="Invalid credentials"
+                            description="Your username or password is incorrect."
+                            type="error"
+                            />
+                        ) : null }
                     </Col>
                 </Row>
             </div>
