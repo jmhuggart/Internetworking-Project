@@ -1,12 +1,15 @@
 import React from 'react';
-import { Row, Col, Card, Form, Icon, Input, Button } from 'antd';
+import { Alert, Row, Col, Card, Form, Icon, Input, Button } from 'antd';
 import { Redirect } from 'react-router-dom';
 import './login.css';
 
 class RegisterForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {isComplete: false};
+        this.state = {
+            isComplete: false,
+            isInvalid: false
+        };
     }
 
     handleSubmit = e => {
@@ -16,6 +19,7 @@ class RegisterForm extends React.Component {
                 console.log('Received values of form: ', values);
 
                 var register_data = values;
+                const that = this;
 
                 var request = new Request('/register', {
                     method: 'POST',
@@ -26,18 +30,31 @@ class RegisterForm extends React.Component {
                 });
 
                 fetch(request)
-                .then(function() {
-                });
-
-                this.setState({
-                        isComplete: true
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw Error(response.statusText);
+                    }
+                    return response;
+                }).then(function(response) {
+                    console.log('ok');
+                    that.setState({
+                        isComplete: true,
+                        isInvalid: false
                     });
+                }).catch(function(error) {
+                    that.setState({
+                        isComplete: false,
+                        isInvalid: true
+                    });
+                    console.log(error);
+                });
             }
         });
     };
 
     render() {
         const { getFieldDecorator } = this.props.form;
+        const isInvalid = this.state.isInvalid;
         if (this.state.isComplete) {
             return <Redirect to='/' />
         }
@@ -97,6 +114,13 @@ class RegisterForm extends React.Component {
                                 </Form.Item>
                             </Form>
                         </Card>
+                        {isInvalid ? (
+                            <Alert
+                            message="Invalid email"
+                            description="Please enter in a complete email address."
+                            type="error"
+                            />
+                        ) : null }
 
                     </Col>
                 </Row>

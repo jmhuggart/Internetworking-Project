@@ -16,10 +16,11 @@ config = {
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 db = firebase.database()
+userType = None
 
 @main.route('/')
 def my_index():
-	return render_template("index.html")
+	return render_template("index.html", userType = userType)
 
 @main.route('/adminPage', methods=['GET', 'POST' ])
 def adminPage():
@@ -50,7 +51,7 @@ def adminPage():
 		}
 		db.child("Tasks").push(taskdata)
 		return my_index()
-	return render_template("index.html")
+	return my_index()
 
 @main.route('/login', methods=['GET', 'POST' ])
 def login():
@@ -59,8 +60,11 @@ def login():
 		email = login_data['email']
 		password = login_data['pass']
 		user = auth.sign_in_with_email_and_password(email, password)
-		return 'Login Successful'
-	return render_template('index.html')
+		user_name = findUserName(email)
+		global userType
+		userType = findUserType(user_name)
+		return my_index()
+	return my_index()
 
 @main.route('/register', methods=['GET', 'POST' ])
 def register():
@@ -71,10 +75,28 @@ def register():
 		password = register_data['pass']
 		auth.create_user_with_email_and_password(email, password)
 		user = auth.sign_in_with_email_and_password(email, password)
+		# For the moment, each user created will be 'user' type and not 'admin'
 		data = {
-			"Name": name,
-			"Email": email
+			"Email": email,
+			"Type": "User"
 		}
-		db.child("Users").push(data, user['idToken'])
+		db.child("Users").child(name).set(data)
 		return my_index()
-	return render_template('index.html')
+	return my_index()
+
+
+
+# HELPER FUNCTIONS
+
+def findUserName(email):
+	user_to_find = db.child("Users").order_by_child("Email").equal_to(email).get()
+	for user in user_to_find.each():
+		user_name = user.key()
+	return user_name
+
+def findUserType(name):
+	user_to_check = db.child("Users").order_by_key().equal_to(name).get()
+	#user_type = user_to_check.val()["Type"]
+	for user in user_to_check.each():
+		user_type = user.val()["Type"]
+	return user_type
