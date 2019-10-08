@@ -57,6 +57,7 @@ class Admin extends React.Component {
                      <CreateTask />
                    </TabPane>
                  </Tabs>
+                 <p>userType is {window.userType}</p>
             </div>
         )
     }

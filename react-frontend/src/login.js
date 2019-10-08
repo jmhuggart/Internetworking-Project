@@ -3,6 +3,7 @@ import { Alert, Row, Col, Card, Form, Icon, Input, Button } from 'antd';
 import { Redirect } from 'react-router-dom';
 import './login.css';
 
+
 class LoginForm extends React.Component {
     constructor(props) {
         super(props);
@@ -47,6 +48,7 @@ class LoginForm extends React.Component {
                         isInvalid: true
                     });
                     console.log(error);
+                    console.log(window["userType"]);
                 });
             }
         });
