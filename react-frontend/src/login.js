@@ -48,7 +48,6 @@ class LoginForm extends React.Component {
                         isInvalid: true
                     });
                     console.log(error);
-                    console.log(window["userType"]);
                 });
             }
         });
@@ -56,6 +55,7 @@ class LoginForm extends React.Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
+        var userObject = JSON.parse(window["user"].replace(/&#34;/g,'"'));
         const isInvalid = this.state.isInvalid;
         if (this.state.isComplete) {
             return <Redirect to='/' />
@@ -103,6 +103,7 @@ class LoginForm extends React.Component {
                             type="error"
                             />
                         ) : null }
+                        <p>My name is {userObject.name}</p>
                     </Col>
                 </Row>
             </div>

@@ -4,7 +4,12 @@ import { Row, Col, Card, Form, Icon, Input, Button, Checkbox, Tabs, Select } fro
 import CreateTask from './create-task.js';
 import './login.css';
 
-
+function checkAdmin(userType) {
+    if (userType === "Admin") {
+        return true;
+    }
+    return false;
+}
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -39,25 +44,40 @@ class Admin extends React.Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
+        var userObject = JSON.parse(window["user"].replace(/&#34;/g,'"'));
+        var isAdmin = checkAdmin(userObject.type);
+        var tabs;
 
-
-        return (
-            <div style={{ width:'80%',margin:'3% auto 0' }}>
-                <div style={{overflow:'hidden',textAlign:'right'}}>
-                  <Link to='/login'>Sign out</Link>
-                </div>
+        if (isAdmin) {
+            tabs = [
                 <Tabs animated={true} style={{textAlign: 'center'}}>
                    <TabPane tab="Task List" key="1" style={{textAlign: 'left'}}>
                      Content of Tab 1
                    </TabPane>
-                   <TabPane tab="Worker List" key="2" style={{textAlign: 'left'}}>
-                     Content of Tab 2
-                   </TabPane>
-                   <TabPane tab="Create Task" key="3" style={{textAlign: 'left'}}>
-                     <CreateTask />
+                    <TabPane tab="Worker List" key="2" style={{textAlign: 'left'}}>
+                        Content of Tab 2
+                    </TabPane>
+                    <TabPane tab="Create Task" key="3" style={{textAlign: 'left'}}>
+                        <CreateTask />
+                    </TabPane>
+                 </Tabs>
+            ];
+        } else {
+            tabs = [
+                <Tabs animated={true} style={{textAlign: 'center'}}>
+                   <TabPane tab="Task List" key="1" style={{textAlign: 'left'}}>
+                     Content of Tab 1
                    </TabPane>
                  </Tabs>
-                 <p>userType is {window.userType}</p>
+            ];
+        }
+
+        return (
+            <div style={{ width:'80%',margin:'3% auto 0' }}>
+                <div style={{overflow:'hidden', textAlign:'right'}}>
+                  <Link to='/login'>Sign out</Link>
+                </div>
+                {tabs}
             </div>
         )
     }

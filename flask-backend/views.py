@@ -1,5 +1,6 @@
 from flask import *
 import pyrebase
+import json
 
 main = Blueprint('main', __name__)
 
@@ -16,11 +17,12 @@ config = {
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 db = firebase.database()
-userType = None
+user = None
 
 @main.route('/')
 def my_index():
-	return render_template("index.html", userType = userType)
+	user_data = jsonUser(user)
+	return render_template("index.html", user = user_data)
 
 @main.route('/adminPage', methods=['GET', 'POST' ])
 def adminPage():
@@ -59,10 +61,9 @@ def login():
 		login_data = request.get_json()
 		email = login_data['email']
 		password = login_data['pass']
+		global user
 		user = auth.sign_in_with_email_and_password(email, password)
 		user_name = findUserName(email)
-		global userType
-		userType = findUserType(user_name)
 		return my_index()
 	return my_index()
 
@@ -74,6 +75,7 @@ def register():
 		email = register_data['email']
 		password = register_data['pass']
 		auth.create_user_with_email_and_password(email, password)
+		global user
 		user = auth.sign_in_with_email_and_password(email, password)
 		# For the moment, each user created will be 'user' type and not 'admin'
 		data = {
@@ -96,7 +98,16 @@ def findUserName(email):
 
 def findUserType(name):
 	user_to_check = db.child("Users").order_by_key().equal_to(name).get()
-	#user_type = user_to_check.val()["Type"]
 	for user in user_to_check.each():
 		user_type = user.val()["Type"]
 	return user_type
+
+def jsonUser(user):
+	if (user is not None):
+		user_name = findUserName(user['email'])
+		user_type = findUserType(user_name)
+		user_data = {"name": user_name, "email": user['email'], "type": user_type}
+	else:
+		user_data = {"name": "nil", "email": "nil", "type": "nil"}
+	
+	return json.dumps(user_data)
