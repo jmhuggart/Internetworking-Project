@@ -5,6 +5,7 @@ import Home from './App.js';
 import LoginForm from './login.js';
 import RegisterForm from './register.js';
 import Admin from './adminPage.js'
+import ListPage from './QuestionListPage.js'
 
 export default class AppRouter extends React.Component {
 	constructor(props) {
@@ -18,6 +19,7 @@ export default class AppRouter extends React.Component {
 					<Route path="/login" component={LoginForm}></Route>
 					<Route path="/register" component={RegisterForm}></Route>
 					<Route path="/adminPage" component={Admin}></Route>
+					<Route path="/questionList" component={ListPage}></Route>
 				</Switch>
 			</BrowserRouter>
 		)
