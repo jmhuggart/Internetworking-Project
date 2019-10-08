@@ -24,6 +24,20 @@ def my_index():
 	user_data = jsonUser(user)
 	return render_template("index.html", user = user_data)
 
+@main.route('/questionList')
+def questionList():
+	question_subject = db.child("Tasks").child("Subject").get()
+	questions_list = db.child("Tasks").get()
+	questions_values= questions_list.val()
+	questions = []
+
+	questions.append(questions_values)
+
+	jsonify({'questions' : questions})
+
+	return render_template("index.html", questions_data = questions)
+
+
 @main.route('/adminPage', methods=['GET', 'POST' ])
 def adminPage():
 	if request.method == 'POST':
@@ -109,5 +123,5 @@ def jsonUser(user):
 		user_data = {"name": user_name, "email": user['email'], "type": user_type}
 	else:
 		user_data = {"name": "nil", "email": "nil", "type": "nil"}
-	
+
 	return json.dumps(user_data)
