@@ -3,12 +3,25 @@ import { List } from 'antd';
 import { Link } from 'react-router-dom';
 import './QuestionListPage.css'
 
-var questionsObject = (window["data"].replace(/&#34;/g,'"'));
+var questionsObject = JSON.parse(window["questionsdata"].replace(/u&#39;/g,'"').replace(/&#39;/g,'"'));
 
-var data = [];
+console.log(questionsObject);
 
-for (var i in questionsObject)
-    data.push([i, questionsObject [i]]);
+var qLength, text, i;
+
+var qLength = questionsObject.length;
+
+console.log(qLength);
+
+for (i = 0; i<qLength; i++){
+  text = questionsObject[i];
+}
+
+console.log(text);
+
+var t = JSON.stringify(text.Subject);
+
+var data = [t];
 
 class ListPage extends React.Component {
     constructor(props) {

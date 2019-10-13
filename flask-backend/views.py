@@ -26,16 +26,13 @@ def my_index():
 
 @main.route('/questionList')
 def questionList():
-	question_subject = db.child("Tasks").child("Subject").get()
 	questions_list = db.child("Tasks").get()
-	questions_values= questions_list.val()
-	questions = []
+	task = questions_list.val()
+	i=0
 
-	questions.append(questions_values)
+	i += 1
 
-	jsonify({'questions' : questions})
-
-	return render_template("index.html", questions_data = questions)
+	return render_template("index.html", questions_data = task.values())
 
 
 @main.route('/adminPage', methods=['GET', 'POST' ])
@@ -65,7 +62,7 @@ def adminPage():
 			"Answer-C": answerC,
 			"Answer-D": answerD
 		}
-		db.child("Tasks").push(taskdata)
+		db.child("Tasks").chid(Subject).set(taskdata)
 		return my_index()
 	return my_index()
 
@@ -103,6 +100,29 @@ def register():
 
 
 # HELPER FUNCTIONS
+
+def grabListofTasks():
+	task_list = db.child("Tasks").get()
+
+	i = 0
+
+	for task in task_list.each():
+		task_question = task.val()["Question"]
+		task_subject = task.val()["Subject"]
+		task_answerA = task.val()["Answer-A"]
+		task_answerB = task.val()["Answer-B"]
+		task_answerC = task.val()["Answer-C"]
+		task_answerD = task.val()["Answer-D"]
+
+	tasklist = {"Question": task_question, "Subject": task_subject, "Answer-A": task_answerA, "Answer-B": task_answerB, "Answer-C": task_answerC, "Answer-D": task_answerD}
+
+	json_task_list = {}
+
+	json_task_list.update(tasklist)
+	i += 1
+
+	return json.dumps(json_task_list)
+
 
 def findUserName(email):
 	user_to_find = db.child("Users").order_by_child("Email").equal_to(email).get()
