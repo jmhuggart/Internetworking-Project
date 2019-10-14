@@ -3,50 +3,23 @@ import { List } from 'antd';
 import { Link } from 'react-router-dom';
 import './QuestionListPage.css'
 
-var questionsObject = JSON.parse(window["questionsdata"].replace(/u&#39;/g,'"').replace(/&#39;/g,'"'));
+console.log(window["tasks"].replace(/&#39;/g,'"').replace(/&#34;/g,'"'));
+var tasksObject = JSON.parse(window["tasks"].replace(/u&#39;/g,'"').replace(/&#34;/g,'"'));
 
-console.log(questionsObject);
+console.log(tasksObject);
 
-var qLength, text, i;
-
-var qLength = questionsObject.length;
-
-console.log(qLength);
-
-for (i = 0; i<qLength; i++){
-  text = questionsObject[i];
+for (var i = 0; i < tasksObject.numTasks; i++) {
+  console.log(tasksObject["task" + i]["answerA"]);
 }
 
-console.log(text);
 
-var t = JSON.stringify(text.Subject);
-
-var data = [t];
+// for the moment
+var data = null;
 
 class ListPage extends React.Component {
     constructor(props) {
         super(props);
     }
-
-    handleSubmit = e => {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-
-                var list_data = values;
-                const that = this;
-
-                var request = new Request('/questionList', {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(list_data)
-                });
-              }
-          });
-      };
 
     render() {
 

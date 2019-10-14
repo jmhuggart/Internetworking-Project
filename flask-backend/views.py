@@ -26,13 +26,9 @@ def my_index():
 
 @main.route('/questionList')
 def questionList():
-	questions_list = db.child("Tasks").get()
-	task = questions_list.val()
-	i=0
-
-	i += 1
-
-	return render_template("index.html", questions_data = task.values())
+	task_data = grabListofTasks()
+	user_data = jsonUser(user)
+	return render_template("index.html", tasks = task_data, user = user_data)
 
 
 @main.route('/adminPage', methods=['GET', 'POST' ])
@@ -104,24 +100,26 @@ def register():
 def grabListofTasks():
 	task_list = db.child("Tasks").get()
 
+	master_task_list = {}
+	json_task = {}
 	i = 0
 
 	for task in task_list.each():
-		task_question = task.val()["Question"]
-		task_subject = task.val()["Subject"]
-		task_answerA = task.val()["Answer-A"]
-		task_answerB = task.val()["Answer-B"]
-		task_answerC = task.val()["Answer-C"]
-		task_answerD = task.val()["Answer-D"]
+		json_task['question'] = task.val()["Question"]
+		json_task['subject'] = task.val()["Subject"]
+		json_task['answerA'] = task.val()["Answer-A"]
+		json_task['answerB'] = task.val()["Answer-B"]
+		json_task['answerC'] = task.val()["Answer-C"]
+		json_task['answerD'] = task.val()["Answer-D"]
+		task_holder = json_task.copy()
 
-	tasklist = {"Question": task_question, "Subject": task_subject, "Answer-A": task_answerA, "Answer-B": task_answerB, "Answer-C": task_answerC, "Answer-D": task_answerD}
 
-	json_task_list = {}
+		master_task_list['task' + str(i)] = task_holder
+		i += 1
 
-	json_task_list.update(tasklist)
-	i += 1
+	master_task_list['numTasks'] = str(i)
 
-	return json.dumps(json_task_list)
+	return json.dumps(master_task_list)
 
 
 def findUserName(email):
