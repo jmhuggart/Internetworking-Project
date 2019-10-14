@@ -2,6 +2,8 @@ import React from 'react';
 import { List } from 'antd';
 import { Link } from 'react-router-dom';
 import './QuestionListPage.css'
+import Home from './App.js';
+import ReactDOM from 'react-dom';
 
 const data = [];
 
@@ -13,9 +15,6 @@ for (var i = 0; i < tasksObject.numTasks; i++) {
   data.push(tasksObject["task" + i]["subject"]);
 }
 
-// for the moment
-
-
 class ListPage extends React.Component {
     constructor(props) {
         super(props);
@@ -24,13 +23,11 @@ class ListPage extends React.Component {
     render() {
         return (
             <div style={{ width:'80%',margin:'3% auto 0' }}>
-
                 <div style={{overflow:'hidden',textAlign:'right'}}>
                   <Link to='/home'>Sign out</Link>
                 </div>
                 <div>
                   <h1>LIST OF TASKS</h1>
-
                   <List
                     size="small"
                     bordered
@@ -39,25 +36,15 @@ class ListPage extends React.Component {
                     renderItem={item =>
                       <List.Item className="list-wap">
                        <Link to="/questionDetails">
-
                         <List.Item.Meta
                           title={item}
                           description= "Subject:[subjectName]&nbsp;&nbsp;&nbsp;&nbsp; CreationDate:[date]"
                         />
                       </Link>
                       </List.Item>
-
                     }
                   />
-
                 </div>
-
-
-
-
-
-
-
             </div>
         )
     }

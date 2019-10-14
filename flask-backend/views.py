@@ -22,13 +22,12 @@ user = None
 @main.route('/')
 def my_index():
 	user_data = jsonUser(user)
-	return render_template("index.html", user = user_data)
+	task_data = grabListofTasks()
+	return render_template("index.html", user = user_data, tasks = task_data)
 
 @main.route('/questionList')
 def questionList():
-	task_data = grabListofTasks()
-	user_data = jsonUser(user)
-	return render_template("index.html", tasks = task_data, user = user_data)
+	return my_index()
 
 
 @main.route('/adminPage', methods=['GET', 'POST' ])
