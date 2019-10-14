@@ -3,17 +3,18 @@ import { List } from 'antd';
 import { Link } from 'react-router-dom';
 import './QuestionListPage.css'
 
+const data = [];
+
 var tasksObject = JSON.parse(window["tasks"].replace(/u&#39;/g,'"').replace(/&#34;/g,'"'));
 
 console.log(tasksObject);
 
 for (var i = 0; i < tasksObject.numTasks; i++) {
-  console.log(tasksObject["task" + i]["answerA"]);
+  data.push(tasksObject["task" + i]["subject"]);
 }
 
-
 // for the moment
-var data = null;
+
 
 class ListPage extends React.Component {
     constructor(props) {
@@ -34,13 +35,13 @@ class ListPage extends React.Component {
                     size="small"
                     bordered
                     style={{textAlign:'center'}}
-                    dataSource={tasksObject}
+                    dataSource={data}
                     renderItem={item =>
                       <List.Item className="list-wap">
                        <Link to="/questionDetails">
 
                         <List.Item.Meta
-                          title={}
+                          title={item}
                           description= "Subject:[subjectName]&nbsp;&nbsp;&nbsp;&nbsp; CreationDate:[date]"
                         />
                       </Link>
