@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Card, Form, Icon, Input, Button, Checkbox, Tabs, Select, Radio } from 'antd';
+import { Form, Input, Button, Radio } from 'antd';
 
 const { TextArea } = Input;
 

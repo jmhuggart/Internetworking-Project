@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Card, Form, Icon, Input, Button, Checkbox, Tabs, Select } from 'antd';
+import { Form, Tabs } from 'antd';
 import CreateTask from './create-task.js';
 import './login.css';
 
@@ -12,7 +12,6 @@ function checkAdmin(userType) {
 }
 
 const { TabPane } = Tabs;
-const { Option } = Select;
 
 class Admin extends React.Component {
     constructor(props) {

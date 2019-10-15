@@ -108,11 +108,10 @@ def taskVote():
 		for task in task_to_update.each():
 			new_votes = int(task.val()[selected_answer]) + 1
 			key = task.key()
-			this_task = task
 		db.child("Tasks").child(key).update({selected_answer: str(new_votes)})
 
 		global current_task
-		current_task = jsonTask(this_task)
+		current_task = jsonTask(db.child("Tasks").child(key).get())
 		return render_template("index.html", task = current_task)
 	time.sleep(1)
 	user_data = jsonUser(user)
