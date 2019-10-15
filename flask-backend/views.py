@@ -1,6 +1,8 @@
 from flask import *
 import pyrebase
 import json
+from datetime import datetime
+import time
 
 main = Blueprint('main', __name__)
 
@@ -18,6 +20,7 @@ firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 db = firebase.database()
 user = None
+current_task = None
 
 @main.route('/')
 def my_index():
@@ -48,6 +51,8 @@ def adminPage():
 		else:
 			answerC = "empty"
 			answerD = "empty"
+		now = datetime.now()
+		creation_DT = now.strftime("%d/%m/%Y %H:%M:%S")
 
 		taskdata = {
 			"Subject": subject,
@@ -55,9 +60,10 @@ def adminPage():
 			"Answer-A": answerA,
 			"Answer-B": answerB,
 			"Answer-C": answerC,
-			"Answer-D": answerD
+			"Answer-D": answerD,
+			"PostDT": creation_DT
 		}
-		db.child("Tasks").chid(Subject).set(taskdata)
+		db.child("Tasks").push(taskdata)
 		return my_index()
 	return my_index()
 
@@ -92,9 +98,46 @@ def register():
 		return my_index()
 	return my_index()
 
+@main.route('/questionDetails', methods=['GET', 'POST'])
+def taskVote():
+	if request.method == 'POST':
+		voteData = request.get_json()
+		selected_answer = voteData['selectedAnswer']
+		question = voteData['question']
+		task_to_update = db.child("Tasks").order_by_child("Question").equal_to(question).get()
+		for task in task_to_update.each():
+			new_votes = int(task.val()[selected_answer]) + 1
+			key = task.key()
+			this_task = task
+		db.child("Tasks").child(key).update({selected_answer: str(new_votes)})
+
+		global current_task
+		current_task = jsonTask(this_task)
+		return render_template("index.html", task = current_task)
+	time.sleep(1)
+	user_data = jsonUser(user)
+	task_data = grabListofTasks()
+	return render_template("index.html", user = user_data, tasks = task_data, task = current_task)
+
 
 
 # HELPER FUNCTIONS
+
+def jsonTask(task):
+	task_details = {}
+	task_details['question'] = task.val()["Question"]
+	task_details['subject'] = task.val()["Subject"]
+	task_details['answerA'] = task.val()["Answer-A"]
+	task_details['answerB'] = task.val()["Answer-B"]
+	task_details['answerC'] = task.val()["Answer-C"]
+	task_details['answerD'] = task.val()["Answer-D"]
+	task_details['postDT'] = task.val()["PostDT"]
+	task_details['A'] = task.val()["A"]
+	task_details['B'] = task.val()["B"]
+	task_details['C'] = task.val()["C"]
+	task_details['D'] = task.val()["D"]
+
+	return json.dumps(task_details)
 
 def grabListofTasks():
 	task_list = db.child("Tasks").get()
@@ -110,6 +153,11 @@ def grabListofTasks():
 		json_task['answerB'] = task.val()["Answer-B"]
 		json_task['answerC'] = task.val()["Answer-C"]
 		json_task['answerD'] = task.val()["Answer-D"]
+		json_task['A'] = task.val()["A"]
+		json_task['B'] = task.val()["B"]
+		json_task['C'] = task.val()["C"]
+		json_task['D'] = task.val()["D"]
+		json_task['postDT'] = task.val()["PostDT"]
 		task_holder = json_task.copy()
 
 

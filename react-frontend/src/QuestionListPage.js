@@ -2,17 +2,13 @@ import React from 'react';
 import { List } from 'antd';
 import { Link } from 'react-router-dom';
 import './QuestionListPage.css'
-import Home from './App.js';
-import ReactDOM from 'react-dom';
 
 const data = [];
 
 var tasksObject = JSON.parse(window["tasks"].replace(/u&#39;/g,'"').replace(/&#34;/g,'"'));
 
-console.log(tasksObject);
-
 for (var i = 0; i < tasksObject.numTasks; i++) {
-  data.push(tasksObject["task" + i]["subject"]);
+  data.push(tasksObject["task" + i]);
 }
 
 class ListPage extends React.Component {
@@ -35,10 +31,13 @@ class ListPage extends React.Component {
                     dataSource={data}
                     renderItem={item =>
                       <List.Item className="list-wap">
-                       <Link to="/questionDetails">
+                       <Link to={{
+                          pathname: "/questionDetails",
+                          passData: { taskData: item }
+                       }}>
                         <List.Item.Meta
-                          title={item}
-                          description= "Subject:[subjectName]&nbsp;&nbsp;&nbsp;&nbsp; CreationDate:[date]"
+                          title={item.subject}
+                          description= {"Posted on: " + item.postDT}
                         />
                       </Link>
                       </List.Item>
