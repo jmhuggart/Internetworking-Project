@@ -6,6 +6,7 @@ import './QuestionListPage.css'
 const data = [];
 
 var tasksObject = JSON.parse(window["tasks"].replace(/u&#39;/g,'"').replace(/&#34;/g,'"'));
+var userObject = JSON.parse(window["user"].replace(/&#34;/g,'"'));
 
 for (var i = 0; i < tasksObject.numTasks; i++) {
   data.push(tasksObject["task" + i]);
@@ -30,7 +31,10 @@ class ListPage extends React.Component {
                       <List.Item className="list-wap">
                        <Link to={{
                           pathname: "/questionDetails",
-                          passData: { taskData: item }
+                          passData: { 
+                            taskData: item,
+                            userData: userObject
+                          }
                        }}>
                         <List.Item.Meta
                           title={item.subject}

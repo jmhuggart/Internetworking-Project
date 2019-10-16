@@ -117,9 +117,10 @@ def taskVote():
 		question = voteData['question']
 		task_to_update = db.child("Tasks").order_by_child("Question").equal_to(question).get()
 		for task in task_to_update.each():
-			new_votes = int(task.val()[selected_answer]) + 1
 			key = task.key()
-		db.child("Tasks").child(key).update({selected_answer: str(new_votes)})
+			if selected_answer != '':
+				new_votes = int(task.val()[selected_answer]) + 1
+				db.child("Tasks").child(key).update({selected_answer: str(new_votes)})
 
 		global current_task
 		current_task = jsonTask(db.child("Tasks").child(key).get())

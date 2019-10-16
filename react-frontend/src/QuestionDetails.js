@@ -11,6 +11,10 @@ var correctAnswer;
 var votes;
 var answers;
 
+function checkAdmin(userType) {
+    return userType === "Admin";
+}
+
 function simpleMajorityAggregation(votes, answers) {
     var highestVoteHolder = 0;
     var correctAnswerHolder = [];
@@ -104,6 +108,15 @@ class viewTaskApp extends React.Component {
     };
 
     render() {
+      var userType;
+      if (this.props.location.passData !== undefined) {
+          userType = this.props.location.passData.userData.type;
+      } else {
+          var userObject = JSON.parse(window["user"].replace(/&#34;/g,'"'));
+          userType = userObject.type;
+      }
+      var isAdmin = checkAdmin(userType);
+
       if (this.state.signedOut) {
           return <Redirect to='/' />
       }
@@ -212,24 +225,28 @@ class viewTaskApp extends React.Component {
                           </Radio.Group>
                           )}
                       </Form.Item>
-                      <Paragraph>
-                        <ul>
-                          {votes.map(item =>
-                            <li>
-                              {item.key + " - " + item.votes + " votes"}
-                            </li>                            
-                          )}
-                        </ul>
-                        {canConductMAJ ? (
-                          "Simple Majority Aggregation indicates that answer " + correctAnswer[0].key + " is most likely to be correct."
-                        ) : (
-                          <>
-                            <p>This task has not yet been evaluated by a user. In order to conduct Simple Majority Aggregation, a minimum of one response is required.</p>
-                            <p>The reliability of this method increases with the number of responses received.</p>
-                          </>
-                        )}
-                      </Paragraph>
-                      <Form.Item>
+                      {isAdmin ? (
+                        <>
+                          <Paragraph>
+                            <ul>
+                              {votes.map(item =>
+                                <li>
+                                  {item.key + " - " + item.votes + " votes"}
+                                </li>                            
+                              )}
+                            </ul>
+                            {canConductMAJ ? (
+                              "Simple Majority Aggregation indicates that answer " + correctAnswer[0].key + " is most likely to be correct."
+                            ) : (
+                              <>
+                                <p>This task has not yet been evaluated by a user. In order to conduct Simple Majority Aggregation, a minimum of one response is required.</p>
+                                <p>The reliability of this method increases with the number of responses received.</p>
+                              </>
+                            )}
+                          </Paragraph>
+                        </>
+                      ) : null }
+                        <Form.Item>
                         <Button type="primary" htmlType="submit" className="login-form-button">
                             Submit
                         </Button>
