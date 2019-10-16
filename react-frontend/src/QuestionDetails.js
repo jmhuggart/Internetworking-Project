@@ -1,6 +1,6 @@
 import React from 'react';
 import {Radio, Form, Button, Card, Typography } from 'antd';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link, Redirect } from 'react-router-dom';
 const { Paragraph } = Typography;
 
 var taskObject;
@@ -14,7 +14,7 @@ var answers;
 function simpleMajorityAggregation(votes, answers) {
     var highestVoteHolder = 0;
     var correctAnswerHolder = [];
-    var keepString;
+    var keepString = "";
   
     for (var i = 0; i < votes.length; i++) {
         if (parseInt(votes[i].votes, 10) > highestVoteHolder) {
@@ -34,7 +34,8 @@ class viewTaskApp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          value: ""
+          value: "",
+          signedOut: false
         };
     }
 
@@ -76,7 +77,37 @@ class viewTaskApp extends React.Component {
       });
     };
 
+    handleSignOut = e => {
+        var request = new Request('/signOut', {
+            method: 'GET',
+        });
+
+        const that = this;
+
+        fetch(request)
+        .then(function(response) {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }).then(function(response) {
+            console.log('ok');
+            that.setState({
+                signedOut: true
+            });
+        }).catch(function(error) {
+            that.setState({
+                signedOut: false
+            });
+            console.log(error);
+        });
+    };
+
     render() {
+      if (this.state.signedOut) {
+          return <Redirect to='/' />
+      }
+
       if (this.props.location.passData !== undefined) {
           postDT = this.props.location.passData.taskData.postDT;
           subject = this.props.location.passData.taskData.subject;
@@ -128,6 +159,12 @@ class viewTaskApp extends React.Component {
           }
       }
       correctAnswer = simpleMajorityAggregation(votes, answers);
+      var canConductMAJ;
+      if (correctAnswer[0].votes !== 0) {
+          canConductMAJ = true;
+      } else {
+          canConductMAJ = false;
+      }
 
       
 
@@ -142,10 +179,10 @@ class viewTaskApp extends React.Component {
             <div style={{ width:'80%',margin:'3% auto 0' }}>
                 <div style={{overflow:'hidden',}}>
                   <span>
-                    <Link to='/questionList'>Back to Task list</Link>
+                    <Link to='/adminPage'>Back to Task list</Link>
                   </span>
                   <span style={{'float':'right'}}>
-                    <Link to='/home'>Sign out</Link>
+                    <a href='/' onClick = {this.handleSignOut}>Sign out</a>
                   </span>
                 </div>
                 <div>
@@ -183,7 +220,14 @@ class viewTaskApp extends React.Component {
                             </li>                            
                           )}
                         </ul>
-                        {"Simple Majority Aggregation indicates that answer " + correctAnswer[0].key + " is most likely to be correct."}
+                        {canConductMAJ ? (
+                          "Simple Majority Aggregation indicates that answer " + correctAnswer[0].key + " is most likely to be correct."
+                        ) : (
+                          <>
+                            <p>This task has not yet been evaluated by a user. In order to conduct Simple Majority Aggregation, a minimum of one response is required.</p>
+                            <p>The reliability of this method increases with the number of responses received.</p>
+                          </>
+                        )}
                       </Paragraph>
                       <Form.Item>
                         <Button type="primary" htmlType="submit" className="login-form-button">
@@ -197,6 +241,6 @@ class viewTaskApp extends React.Component {
         )
     }
 }
-const viewTask = Form.create()(viewTaskApp);
+viewTaskApp = Form.create()(viewTaskApp);
 
-export default withRouter(viewTask)
+export default withRouter(viewTaskApp)

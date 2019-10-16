@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Form, Tabs } from 'antd';
 import CreateTask from './create-task.js';
+import ListPage from './QuestionListPage.js';
 import './login.css';
 
 function checkAdmin(userType) {
@@ -16,6 +17,9 @@ const { TabPane } = Tabs;
 class Admin extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            signedOut: false
+        };
     }
 
     handleSubmit = e => {
@@ -41,20 +45,46 @@ class Admin extends React.Component {
         });
     };
 
+    handleSignOut = e => {
+        var request = new Request('/signOut', {
+            method: 'GET',
+        });
+
+        const that = this;
+
+        fetch(request)
+        .then(function(response) {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }).then(function(response) {
+            console.log('ok');
+            that.setState({
+                signedOut: true
+            });
+        }).catch(function(error) {
+            that.setState({
+                signedOut: false
+            });
+            console.log(error);
+        });
+    };
+
     render() {
-        const { getFieldDecorator } = this.props.form;
         var userObject = JSON.parse(window["user"].replace(/&#34;/g,'"'));
         var isAdmin = checkAdmin(userObject.type);
         var tabs;
 
+        if (this.state.signedOut) {
+            return <Redirect to='/' />
+        }
+
         if (isAdmin) {
             tabs = [
                 <Tabs animated={true} style={{textAlign: 'center'}}>
-                   <TabPane tab="Task List" key="1" style={{textAlign: 'left'}}>
-                     Content of Tab 1
-                   </TabPane>
-                    <TabPane tab="Worker List" key="2" style={{textAlign: 'left'}}>
-                        Content of Tab 2
+                    <TabPane tab="Task List" key="1" style={{textAlign: 'left'}}>
+                        <ListPage />
                     </TabPane>
                     <TabPane tab="Create Task" key="3" style={{textAlign: 'left'}}>
                         <CreateTask />
@@ -64,17 +94,17 @@ class Admin extends React.Component {
         } else {
             tabs = [
                 <Tabs animated={true} style={{textAlign: 'center'}}>
-                   <TabPane tab="Task List" key="1" style={{textAlign: 'left'}}>
-                     Content of Tab 1
-                   </TabPane>
-                 </Tabs>
+                    <TabPane tab="Task List" key="1" style={{textAlign: 'left'}}>
+                        <ListPage />
+                    </TabPane>
+                </Tabs>
             ];
         }
 
         return (
             <div style={{ width:'80%',margin:'3% auto 0' }}>
                 <div style={{overflow:'hidden', textAlign:'right'}}>
-                  <Link to='/login'>Sign out</Link>
+                  <a href='/' onClick = {this.handleSignOut}>Sign out</a>
                 </div>
                 {tabs}
             </div>

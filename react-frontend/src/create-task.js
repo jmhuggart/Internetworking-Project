@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Input, Button, Radio } from 'antd';
+import { Redirect } from 'react-router-dom';
 
 const { TextArea } = Input;
 
@@ -15,9 +16,10 @@ const answers = {
 class CreateTask extends React.Component {
     constructor(props) {
         super(props);
-    }
-    state = {
-        asnum: 0,
+        this.state = {
+            asnum: 0,
+            didSubmit: false
+        };
     }
 
     handleSubmit = e => {
@@ -36,8 +38,24 @@ class CreateTask extends React.Component {
                     body: JSON.stringify(task_data)
                 });
 
+                const that = this;
+
                 fetch(request)
-                .then(function() {
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw Error(response.statusText);
+                    }
+                    return response;
+                }).then(function(response) {
+                    console.log('ok');
+                    that.setState({
+                        didSubmit: true
+                    });
+                }).catch(function(error) {
+                    that.setState({
+                        didSubmit: false
+                    });
+                    console.log(error);
                 });
             }
         });
@@ -51,6 +69,10 @@ class CreateTask extends React.Component {
     };
 
     render() {
+        if (this.state.didSubmit) {
+            return <Redirect to='/adminPage' />
+        }
+
         const { getFieldDecorator } = this.props.form;
         const { asnum } = this.state;
 
@@ -73,7 +95,6 @@ class CreateTask extends React.Component {
             console.log("items -->", items);
             return items
         }
-
         return (
             <div style={{ width:'80%',margin:'3% auto 0' }}>
                 <Form onSubmit={this.handleSubmit} >
@@ -87,7 +108,6 @@ class CreateTask extends React.Component {
                     ],
                   })(<Input  placeholder='Please enter subject'/>)}
                 </Form.Item>
-
                 <Form.Item label="question">
                   {getFieldDecorator('question', {
                     rules: [
@@ -98,7 +118,6 @@ class CreateTask extends React.Component {
                     ],
                   })(<TextArea  rows={4}  placeholder='Please enter question'/>)}
                 </Form.Item>
-
                 <Form.Item label="the number of answers">
                   {getFieldDecorator('number', {
                     rules: [
@@ -108,7 +127,6 @@ class CreateTask extends React.Component {
                       },
                     ],
                   })(
-
                   <Radio.Group onChange={this.onChange} >
                      <Radio  value="2"> Two </Radio>
                      <Radio  value="3"> Three </Radio>
@@ -116,14 +134,8 @@ class CreateTask extends React.Component {
                    </Radio.Group>
                   )}
                 </Form.Item>
-
-
                     {InputApp(asnum)}
-
-
-
                     <Form.Item>
-
                         <Button type="primary" htmlType="submit" className="login-form-button">
                             Create a Task
                         </Button>

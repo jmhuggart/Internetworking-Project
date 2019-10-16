@@ -55,7 +55,6 @@ class LoginForm extends React.Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        var userObject = JSON.parse(window["user"].replace(/&#34;/g,'"'));
         const isInvalid = this.state.isInvalid;
         if (this.state.isComplete) {
             return <Redirect to='/' />
@@ -92,7 +91,7 @@ class LoginForm extends React.Component {
                                     <Button type="primary" htmlType="submit" className="login-form-button">
                                         Log in
                                     </Button>
-                                    <a href="/reg" className='login-form-reg'>register now!</a>
+                                    <a href="/register" className='login-form-reg'>register now!</a>
                                 </Form.Item>
                             </Form>
                         </Card>
@@ -103,7 +102,6 @@ class LoginForm extends React.Component {
                             type="error"
                             />
                         ) : null }
-                        <p>My name is {userObject.name}</p>
                     </Col>
                 </Row>
             </div>

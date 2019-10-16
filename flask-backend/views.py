@@ -41,16 +41,24 @@ def adminPage():
 		question = task_data['question']
 		number = task_data['number']
 		answerA = task_data['subjectA']
+		A = "0"
 		answerB = task_data['subjectB']
+		B = "0"
 		if number == "3":
 			answerC = task_data['subjectC']
+			C = "0"
 			answerD = 'empty'
+			D = "NA"
 		elif number == "4":
 			answerC = task_data['subjectC']
+			C = "0"
 			answerD = task_data['subjectD']
+			D = "0"
 		else:
 			answerC = "empty"
+			C = "NA"
 			answerD = "empty"
+			D = "NA"
 		now = datetime.now()
 		creation_DT = now.strftime("%d/%m/%Y %H:%M:%S")
 
@@ -61,6 +69,10 @@ def adminPage():
 			"Answer-B": answerB,
 			"Answer-C": answerC,
 			"Answer-D": answerD,
+			"A": A,
+			"B": B,
+			"C": C,
+			"D": D,
 			"PostDT": creation_DT
 		}
 		db.child("Tasks").push(taskdata)
@@ -75,7 +87,6 @@ def login():
 		password = login_data['pass']
 		global user
 		user = auth.sign_in_with_email_and_password(email, password)
-		user_name = findUserName(email)
 		return my_index()
 	return my_index()
 
@@ -117,6 +128,13 @@ def taskVote():
 	user_data = jsonUser(user)
 	task_data = grabListofTasks()
 	return render_template("index.html", user = user_data, tasks = task_data, task = current_task)
+
+@main.route('/signOut', methods=['GET'])
+def signOut():
+	global user
+	user = None
+	return my_index()
+
 
 
 
